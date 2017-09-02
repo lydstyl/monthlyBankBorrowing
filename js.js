@@ -4,9 +4,9 @@ var immeuble = i ={
     prixTravauxAuM2 : 1000,
     surfaceChambre : 15,
     txNotaire : 0.08,
-    expertComptable : 300,
-    courtier : 300,
-    taxFonciere : 300,
+    expertComptable : 1000,
+    courtier : 1500,
+    taxFonciere : 900,
     txEffectifGlobal : 0.018,
     meuble1Chambre : 300,
     impotRevenuFoncier : 0, // normalement possible à 0 en meublé
@@ -64,4 +64,4 @@ var immeuble = i ={
     }
 }
 
-immeuble.showMeCashFlow(20);
+immeuble.showMeCashFlow(8);
