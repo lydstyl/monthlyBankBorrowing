@@ -1,73 +1,67 @@
-function bankBorrowing(montantEmprunte, nbAnnees, txEffectifGlobal, mensualite){
-    var n = nbAnnees * 12;
-    if(!mensualite){
-        var mensualite = (montantEmprunte * txEffectifGlobal / 12) / (1 -  Math.pow((1 + txEffectifGlobal / 12), -n));
-        return Math.round(mensualite);
-    }
-    if(!montantEmprunte){
-        var montantEmprunte = (((1 -  Math.pow((1 + txEffectifGlobal / 12), -n)) * mensualite) * 12) / txEffectifGlobal;
-        return Math.round(montantEmprunte);
-    }
-    if(!txEffectifGlobal){
-        return 'Comment calculer le taux effectif global ?';
-    }
-    if(!nbAnnees){
-        return 'Comment calculer le nombre d\'années ?';
+var immeuble = i ={
+    loyer1chambre : 350,
+    prixAuM2 : 1000,
+    prixTravauxAuM2 : 1000,
+    surfaceChambre : 15,
+    txNotaire : 0.08,
+    expertComptable : 300,
+    courtier : 300,
+    taxFonciere : 300,
+    txEffectifGlobal : 0.018,
+    meuble1Chambre : 300,
+    impotRevenuFoncier : 0, // normalement possible à 0 en meublé
+    dureeEmprunt : 14,
+    bankBorrowing : function(montantEmprunte, nbAnnees, txEffectifGlobal, mensualite){
+        var n = nbAnnees * 12;
+        if(!mensualite){
+            var mensualite = (montantEmprunte * txEffectifGlobal / 12) / (1 -  Math.pow((1 + txEffectifGlobal / 12), -n));
+            return Math.round(mensualite);
+        }
+        if(!montantEmprunte){
+            var montantEmprunte = (((1 -  Math.pow((1 + txEffectifGlobal / 12), -n)) * mensualite) * 12) / txEffectifGlobal;
+            return Math.round(montantEmprunte);
+        }
+        /* if(!txEffectifGlobal){
+            return 'Comment calculer le taux effectif global ?';
+        }
+        if(!nbAnnees){
+            return 'Comment calculer le nombre d\'années ?';
+        } */
+    },
+    showMeCashFlow : function(nbMaxDeChambre) {
+        for(var j = 0; j < nbMaxDeChambre; j++){
+            i.nbChambres = j + 1;
+            // REVENUS
+            i.loyerMensuel = i.loyer1chambre * i.nbChambres;
+            // COUT
+            i.surfaceCuisine = 10 + 2 * i.nbChambres;
+            i.surface = i.surfaceCuisine + i.nbChambres * i.surfaceChambre;
+            i.prix = i.surface * i.prixAuM2;
+            i.travaux = i.surface * i.prixTravauxAuM2;
+            i.notaire = i.txNotaire * i.prix;
+            i.cout = i.prix + i.travaux + i.notaire + i.expertComptable + i.courtier + i.meuble1Chambre * i.nbChambres;
+            // RENTA BRUTE
+            i.rentaBrute = ((i.loyerMensuel * 12) / i.cout).toFixed(2); // il faut peut etre enlever les charges au loyer dans la renta brute ou alors c'est pour la renta nette je ne sais plus
+            // CHARGES
+            i.mensualiteBanque = i.bankBorrowing(i.cout, i.dureeEmprunt, i.txEffectifGlobal, '')
+            i.autresChargesMensuelles = Math.round((i.taxFonciere + i.impotRevenuFoncier) / 12); // attention peut etre ajouter cout * 0.01 d'entretien locaux
+            // cashFlowMensuel
+            i.cashFlowMensuel = (i.loyerMensuel - i.mensualiteBanque - i.autresChargesMensuelles);
+            console.log(
+                'Nombre de chambre : ' + i.nbChambres + 
+                ' surface : ' + i.surface +
+                ' cout ou emprunt : ' + i.cout +
+                // ' loyerMensuel : ' + i.loyerMensuel +
+                // ' mensualiteBanque : ' + i.mensualiteBanque +
+                // ' autresChargesMensuelles : ' + i.autresChargesMensuelles +
+                // ' rentaBrute : ' + i.rentaBrute +
+                ' cash-flow mensuel : ' + i.cashFlowMensuel
+            );
+            console.log('Plus de détails dans l\'objet ci-dessous : ');
+            console.log(i);
+            console.log('\r\n');
+        }
     }
 }
-/* console.log(bankBorrowing('', 20, 0.045, 1265));
-console.log(bankBorrowing(200000, 20, 0.045, ''));
-console.log(bankBorrowing(200000, 20, '', 1265));
-console.log(bankBorrowing(200000, '', 0.045, 1265)); */
 
-
-
-var loyer1chambre = 300;
-var prixAuM2 = 700;
-var prixTravauxAuM2 = 600;
-var surfaceChambre = 15;
-var txNotaire = 0.08;
-var expertComptable = 300;
-var courtier = 300;
-var taxFonciere = 300;
-var txEffectifGlobal = 0.018;
-var meuble1Chambre = 200;
-var impotRevenuFoncier = 0;
-var dureeEmprunt = 14;
-
-var nbChambres, surfaceCuisine, surface,
-prix, notaire, cout, loyerMensuel, mensualiteBanque, 
-autresChargesMensuelles, cashFlowMensuel, travaux,
-rentaBrute; 
-for(var i = 0; i < 10; i++){
-    nbChambres = i + 1;
-    // REVENUS
-    loyerMensuel = loyer1chambre * nbChambres;
-    // COUT
-    surfaceCuisine = 20 + 5 * nbChambres;
-    surface = surfaceCuisine + nbChambres * surfaceChambre;
-    prix = surface * prixAuM2;
-    travaux = surface * prixTravauxAuM2;
-    notaire = txNotaire * prix;
-    cout = prix + travaux + notaire + expertComptable + courtier + meuble1Chambre * nbChambres;
-    // RENTA BRUTE
-    rentaBrute = ((loyerMensuel * 12) / cout).toFixed(2);
-    // CHARGES
-    mensualiteBanque = bankBorrowing(cout, dureeEmprunt, txEffectifGlobal, '')
-    //autresChargesMensuelles = Math.round((taxFonciere + impotRevenuFoncier) / 12 + 
-    //cout * 0.01) // entretien locaux
-    autresChargesMensuelles = Math.round((taxFonciere + impotRevenuFoncier) / 12);
-    // cashFlowMensuel
-    cashFlowMensuel = (loyerMensuel - mensualiteBanque - autresChargesMensuelles);
-
-    console.log(
-        'Nombre de chambre : ' + nbChambres + 
-        ' surface : ' + surface +
-        ' cout ou emprunt : ' + cout +
-        ' loyerMensuel : ' + loyerMensuel +
-        ' mensualiteBanque : ' + mensualiteBanque +
-        ' autresChargesMensuelles : ' + autresChargesMensuelles +
-        ' rentaBrute : ' + rentaBrute +
-        ' cash-flow mensuel : ' + cashFlowMensuel
-    );
-}
+immeuble.showMeCashFlow(20);
