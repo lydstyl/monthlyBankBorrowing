@@ -1,7 +1,7 @@
 var immeuble = i ={
     loyer1chambre : 350,
     prixAuM2 : 1000,
-    prixTravauxAuM2 : 1000,
+    prixTravauxAuM2 : 1100,
     surfaceChambre : 15,
     txNotaire : 0.08,
     expertComptable : 1000,
@@ -45,7 +45,9 @@ var immeuble = i ={
             // CHARGES
             i.mensualiteBanque = i.bankBorrowing(i.cout, i.dureeEmprunt, i.txEffectifGlobal, '')
             i.autresChargesMensuelles = Math.round((i.taxFonciere + i.impotRevenuFoncier) / 12); // attention peut etre ajouter cout * 0.01 d'entretien locaux
-            // cashFlowMensuel
+            // TAUX COUVERTURE
+            i.txCouverture = i.loyerMensuel / i.mensualiteBanque;
+            // CASH-FLOW
             i.cashFlowMensuel = (i.loyerMensuel - i.mensualiteBanque - i.autresChargesMensuelles);
             console.log(
                 'Nombre de chambre : ' + i.nbChambres + 
